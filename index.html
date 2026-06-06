@@ -6,70 +6,105 @@
   <title>Book Identity Card</title>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Satisfy&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  
   <style>
     body { background-color: #f5f5f7; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
-    .card-container { width: 460px; height: 310px; background-color: #c5c8cc; border-radius: 15px; padding: 18px; box-sizing: border-box; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2e3033; padding-bottom: 5px; margin-bottom: 12px; }
-    .card-title { font-size: 12px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; color: #000000; }
-    .card-number { font-size: 11px; color: #000000; font-family: monospace; }
-    .card-body { display: flex; flex: 1; gap: 15px; align-items: flex-start; }
-    .photo-slot { width: 110px; height: 172px; border: none; border-radius: 8px; display: flex; justify-content: center; align-items: center; background-color: rgba(255, 255, 255, 0.4); overflow: hidden; cursor: pointer; flex-shrink: 0; position: relative; }
+
+    .card-container {
+      width: 460px;
+      background-color: #c5c8cc;
+      border-radius: 15px;
+      padding: 18px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid #2e3033; padding-bottom: 5px; margin-bottom: 12px;
+    }
+    .card-title { font-size: 12px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; color: #000; }
+    .card-number { font-size: 11px; color: #000; font-family: monospace; }
+
+    .card-body { display: flex; gap: 15px; align-items: flex-start; }
+
+    /* Photo height = 6 rows × 28px = 168px, aligned to top of detail rows */
+    .photo-slot {
+      width: 110px; height: 168px;
+      border-radius: 8px;
+      display: flex; justify-content: center; align-items: center;
+      background-color: rgba(255,255,255,0.4);
+      overflow: hidden; cursor: pointer; flex-shrink: 0; position: relative;
+    }
     .photo-slot img { width: 100%; height: 100%; object-fit: cover; display: none; }
     .photo-placeholder { font-size: 11px; color: #55595e; text-align: center; }
-    .book-details { display: flex; flex-direction: column; gap: 0px; flex: 1; }
-    .detail-row { display: flex; align-items: flex-end; height: 28px; font-size: 12px; border-bottom: 1px dotted #9da3aa; padding-bottom: 3px; }
-    .label { width: 65px; font-weight: 600; color: #000000; }
-    .value { flex: 1; color: #000000; padding-left: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .book-details { display: flex; flex-direction: column; flex: 1; }
+    .detail-row {
+      display: flex; align-items: flex-end;
+      height: 28px; font-size: 12px;
+      border-bottom: 1px dotted #9da3aa; padding-bottom: 3px;
+    }
+    .label { width: 65px; font-weight: 600; color: #000; }
+    .value { flex: 1; color: #000; padding-left: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .stars-view { color: #ffb400; font-size: 13px; }
-    
-    /* Stempel dengan dua lingkaran seragam */
-    .stamp-badge { 
-    position: absolute; 
-    right: 80px; 
-    bottom: 60px; 
-    width: 70px; 
-    height: 70px; 
-    border: 2px solid currentColor; 
-    border-radius: 50%; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    text-align: center; 
-    text-transform: uppercase; 
-    font-weight: 800; 
-    font-size: 8px; 
-    padding: 5px; 
-    transform: rotate(-12deg); 
-    pointer-events: none; 
-    z-index: 5; 
-    opacity: 0.5; 
-}
 
-.stamp-badge::before { 
-    content: ""; 
-    position: absolute; 
-    width: 60px; 
-    height: 60px; 
-    border: 2px solid currentColor; 
-    border-radius: 50%; 
-    opacity: 1; 
-}
-    
-    .card-footer-area { margin-top: auto; width: 100%; min-height: 35px; display: flex; align-items: center; justify-content: center; }
-    .quote-text-view { font-size: 12px; color: #333333; margin: 0; text-align: center; font-style: italic; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; padding: 0 10px; }
+    .stamp-badge {
+      position: absolute; right: 72px; bottom: 55px;
+      width: 72px; height: 72px;
+      border: 2px solid currentColor; border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
+      text-align: center; text-transform: uppercase;
+      font-weight: 800; font-size: 8px; padding: 5px; line-height: 1.3;
+      transform: rotate(-12deg); pointer-events: none; z-index: 5; opacity: 0.5;
+    }
+    .stamp-badge::before {
+      content: ""; position: absolute;
+      width: 62px; height: 62px;
+      border: 2px solid currentColor; border-radius: 50%;
+    }
 
+    .card-footer-area {
+      margin-top: 10px; width: 100%; min-height: 38px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quote-text-view {
+      font-size: 11.5px; color: #333; margin: 0;
+      text-align: center; font-style: italic;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+      padding: 0 10px; line-height: 1.45;
+    }
+
+    /* Barcode */
+    .barcode-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 100%; }
+    .barcode-svg { display: block; }
+    .barcode-text { font-family: monospace; font-size: 9px; letter-spacing: 2px; color: #555; opacity: 0.7; }
+
+    /* Themes */
     .theme-fresh { background-color: #fffdeb !important; }
-    .theme-fresh .card-title, .theme-fresh .card-number, .theme-fresh .label, .theme-fresh .value, .theme-fresh .quote-text-view, .theme-fresh .stamp-badge { font-family: 'Satisfy', cursive !important; color: #b54558 !important; border-color: #b54558 !important; }
-    
-    .theme-blush { background-color: #fff0f2 !important; }
-    .theme-blush .card-title, .theme-blush .card-number, .theme-blush .label, .theme-blush .value, .theme-blush .quote-text-view, .theme-blush .stamp-badge { font-family: 'Lobster Two', cursive !important; color: #8c4b55 !important; border-color: #8c4b55 !important; }
+    .theme-fresh .card-title, .theme-fresh .card-number, .theme-fresh .label,
+    .theme-fresh .value, .theme-fresh .quote-text-view, .theme-fresh .barcode-text,
+    .theme-fresh .stamp-badge { font-family: 'Satisfy', cursive !important; color: #b54558 !important; border-color: #b54558 !important; }
 
+    .theme-blush { background-color: #fff0f2 !important; }
+    .theme-blush .card-title, .theme-blush .card-number, .theme-blush .label,
+    .theme-blush .value, .theme-blush .quote-text-view, .theme-blush .barcode-text,
+    .theme-blush .stamp-badge { font-family: 'Lobster Two', cursive !important; color: #8c4b55 !important; border-color: #8c4b55 !important; }
+
+    /* Controls */
     .controls-container { margin-top: 25px; width: 460px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     .input-group { margin-bottom: 10px; display: flex; flex-direction: column; gap: 5px; }
     .input-row { display: flex; gap: 10px; }
-    .input-group input, .input-group select { padding: 7px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
-    .download-btn { width: 100%; padding: 10px; background-color: #2e3033; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    .input-group input, .input-group select { padding: 7px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; width: 100%; box-sizing: border-box; }
+    label { font-size: 12px; color: #555; font-weight: 500; }
+    .toggle-row { display: flex; gap: 8px; }
+    .toggle-btn { flex: 1; padding: 7px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; cursor: pointer; background: #f0f0f0; font-weight: 500; }
+    .toggle-btn.active { background: #2e3033; color: white; border-color: #2e3033; }
+    .download-btn { width: 100%; padding: 10px; background-color: #2e3033; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 13px; margin-top: 4px; }
+    .download-btn:hover { background: #444; }
   </style>
 </head>
 <body>
@@ -79,6 +114,7 @@
       <div class="card-title">Book Identity Card</div>
       <div class="card-number" id="card-date-no"></div>
     </div>
+
     <div class="card-body">
       <div class="photo-slot" onclick="triggerUpload()">
         <span class="photo-placeholder" id="placeholder-text">Click to<br>upload cover</span>
@@ -93,14 +129,15 @@
         <div class="detail-row"><span class="label">Rating</span><span class="value stars-view" id="view-rating">-</span></div>
       </div>
     </div>
+
     <div class="stamp-badge" id="view-stamp"></div>
-    <div class="card-footer-area">
-      <div class="quote-text-view" id="footer-quote"></div>
-    </div>
+
+    <div class="card-footer-area" id="footer-area"></div>
   </div>
 
   <div class="controls-container">
-    <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="loadPhoto(event)">
+    <input type="file" id="file-input" accept="image/*" style="display:none" onchange="loadPhoto(event)">
+
     <div class="input-group">
       <label>Card Visual Theme</label>
       <select id="input-card-theme" onchange="applyCardTheme()">
@@ -109,9 +146,24 @@
         <option value="blush" selected>Blush</option>
       </select>
     </div>
-    <div class="input-group"><label>Book Quote</label><input type="text" id="input-quote" placeholder="Enter quote..." oninput="updateText('quote')"></div>
-    <div class="input-group"><label>Book Title</label><input type="text" id="input-title" placeholder="Enter title..." oninput="updateText('title')"></div>
-    <div class="input-group"><label>Author</label><input type="text" id="input-author" placeholder="Enter author..." oninput="updateText('author')"></div>
+
+    <div class="input-group">
+      <label>Footer Style</label>
+      <div class="toggle-row">
+        <button class="toggle-btn active" id="btn-quote" onclick="setFooterMode('quote')">💬 Quote</button>
+        <button class="toggle-btn" id="btn-barcode" onclick="setFooterMode('barcode')">▌▌▌ Barcode</button>
+      </div>
+    </div>
+
+    <div id="quote-input-wrap">
+      <div class="input-group">
+        <label>Book Quote <span style="font-weight:400;color:#999">(auto-filled by rating, or type your own)</span></label>
+        <input type="text" id="input-quote" placeholder="Enter quote..." oninput="renderFooter()">
+      </div>
+    </div>
+
+    <div class="input-group"><label>Book Title</label><input type="text" id="input-title" placeholder="Enter title..." oninput="updateText('title'); renderFooter();"></div>
+    <div class="input-group"><label>Author</label><input type="text" id="input-author" placeholder="Enter author..." oninput="updateText('author'); renderFooter();"></div>
     <div class="input-group"><label>Genre</label><input type="text" id="input-genre" placeholder="Enter genre..." oninput="updateText('genre')"></div>
     <div class="input-row">
       <div class="input-group"><label>Started</label><input type="text" id="input-start" placeholder="DD/MM/YYYY" oninput="updateText('start')"></div>
@@ -129,63 +181,156 @@
         <option value="dnf">❌ DNF (Dropped)</option>
       </select>
     </div>
-    <button class="download-btn" onclick="downloadStableCard()">Download</button>
+    <button class="download-btn" id="dl-btn" onclick="downloadCard()">Download PNG</button>
   </div>
 
-  <script>
-    window.onload = function() { applyCardTheme(); generateDateNo(); };
-    function generateDateNo() {
-        const today = new Date();
-        document.getElementById('card-date-no').innerText = `NO. ${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}`;
+<script>
+let footerMode = 'quote';
+
+window.onload = function() { applyCardTheme(); generateDateNo(); renderFooter(); };
+
+function generateDateNo() {
+  const t = new Date();
+  document.getElementById('card-date-no').innerText =
+    `NO. ${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}${String(t.getDate()).padStart(2,'0')}`;
+}
+
+function triggerUpload() { document.getElementById('file-input').click(); }
+
+function loadPhoto(e) {
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const img = document.getElementById('cover-preview');
+    img.src = ev.target.result;
+    img.style.display = 'block';
+    document.getElementById('placeholder-text').style.display = 'none';
+  };
+  reader.readAsDataURL(e.target.files[0]);
+}
+
+function updateText(field) {
+  const val = document.getElementById('input-' + field).value;
+  document.getElementById('view-' + field).innerText = val || '-';
+}
+
+function applyCardTheme() {
+  const theme = document.getElementById('input-card-theme').value;
+  const card = document.getElementById('library-card');
+  card.classList.remove('theme-fresh','theme-blush');
+  if (theme !== 'minimalist') card.classList.add('theme-' + theme);
+}
+
+function setFooterMode(mode) {
+  footerMode = mode;
+  document.getElementById('btn-quote').classList.toggle('active', mode === 'quote');
+  document.getElementById('btn-barcode').classList.toggle('active', mode === 'barcode');
+  document.getElementById('quote-input-wrap').style.display = mode === 'quote' ? '' : 'none';
+  renderFooter();
+}
+
+function renderFooter() {
+  const area = document.getElementById('footer-area');
+  if (footerMode === 'quote') {
+    const q = document.getElementById('input-quote').value;
+    area.innerHTML = `<div class="quote-text-view">${q ? '\u201c' + q + '\u201d' : ''}</div>`;
+  } else {
+    area.innerHTML = buildBarcode();
+  }
+}
+
+function buildBarcode() {
+  const seed = (document.getElementById('input-title').value || 'BOOK') +
+               (document.getElementById('input-author').value || 'AUTHOR');
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = ((hash << 5) - hash + seed.charCodeAt(i)) | 0;
+  function rand(i) { const x = Math.sin(hash + i) * 43758.5453123; return x - Math.floor(x); }
+
+  const W = 210, H = 30;
+  let bars = '', x = 0, i = 0;
+  while (x < W) {
+    const bw = Math.floor(rand(i++) * 3) + 1;
+    const gap = Math.floor(rand(i++) * 2) + 1;
+    if (rand(i++) > 0.32) {
+      const h = Math.floor(rand(i) * 8) + (H - 10);
+      const y = Math.floor((H - h) / 2);
+      bars += `<rect x="${x}" y="${y}" width="${bw}" height="${h}" fill="currentColor" opacity="0.72"/>`;
     }
-    function triggerUpload() { document.getElementById('file-input').click(); }
-    function loadPhoto(e) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = document.getElementById('cover-preview');
-        img.src = event.target.result;
-        img.style.display = 'block';
-        document.getElementById('placeholder-text').style.display = 'none';
-      }
-      reader.readAsDataURL(e.target.files[0]);
+    x += bw + gap; i++;
+  }
+
+  let h2 = 0;
+  for (let j = 0; j < seed.length; j++) h2 = ((h2 << 5) - h2 + seed.charCodeAt(j)) | 0;
+  const abs = Math.abs(h2);
+  const code = `${String(abs % 1000).padStart(3,'0')}-${String((abs>>4)%10000).padStart(4,'0')}-${String((abs>>8)%100000).padStart(5,'0')}-${String((abs>>12)%10)}`;
+
+  return `<div class="barcode-wrap">
+    <svg class="barcode-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${bars}</svg>
+    <span class="barcode-text">${code}</span>
+  </div>`;
+}
+
+function updateRatingAndStamp() {
+  const rating = document.getElementById('input-rating').value;
+  const content = {
+    '5': {q:"An incredibly delightful journey. Seamless and joyful from start to finish, a trip I didn't want to end.", s:'HIGHLY<br>RECOMMENDED', star:'⭐⭐⭐⭐⭐'},
+    '4': {q:"A scenic route with a few minor detours, but overall, a very pleasant trip.", s:'OFFICIAL<br>RECOMMENDED', star:'⭐⭐⭐⭐'},
+    '3': {q:"A bumpy journey. It was smooth sailing at times, but quite rough at others.", s:'JUST<br>OKAY', star:'⭐⭐⭐'},
+    '2': {q:"Another journey full of holes, but I managed to make it through.", s:'DISAPPOINTED', star:'⭐⭐'},
+    '1': {q:"A long, rough road full of deep potholes. Exhausting, but I finally made it to the finish line.", s:'NOT FOR<br>ME', star:'⭐'},
+    'dnf':{q:"The road was a disaster, so I decided to turn back. I'd rather not waste my time on such a bumpy ride.", s:'DID NOT<br>FINISH', star:'❌ DNF'}
+  };
+  if (content[rating]) {
+    document.getElementById('view-rating').innerText = content[rating].star;
+    document.getElementById('view-stamp').innerHTML = content[rating].s;
+    if (footerMode === 'quote') {
+      document.getElementById('input-quote').value = content[rating].q;
+      renderFooter();
     }
-    function updateText(field) {
-      const val = document.getElementById('input-' + field).value;
-      const target = document.getElementById('view-' + field);
-      if (field === 'quote') document.getElementById('footer-quote').innerText = val ? '"' + val + '"' : "";
-      else target.innerText = val ? val : "-";
+  }
+}
+
+/* Download: capture then clip corners on canvas */
+function downloadCard() {
+  const card = document.getElementById('library-card');
+  const btn = document.getElementById('dl-btn');
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
+
+  html2canvas(card, {
+    scale: 3,
+    backgroundColor: null,
+    useCORS: true,
+    allowTaint: true,
+    onclone: function(doc) {
+      const c = doc.getElementById('library-card');
+      c.style.overflow = 'hidden';
+      c.style.borderRadius = '15px';
     }
-    function applyCardTheme() {
-      const theme = document.getElementById('input-card-theme').value;
-      const card = document.getElementById('library-card');
-      card.classList.remove('theme-fresh', 'theme-blush');
-      if (theme !== 'minimalist') card.classList.add('theme-' + theme);
-    }
-    function updateRatingAndStamp() {
-      const rating = document.getElementById('input-rating').value;
-      const content = {
-        '5': {q: "An incredibly delightful journey. Seamless and joyful from start to finish, a trip I didn't want to end.", s: 'HIGHLY<br>RECOMMENDED', star: '⭐⭐⭐⭐⭐'},
-        '4': {q: "A scenic route with a few minor detours, but overall, a very pleasant trip.", s: 'OFFICIAL<br>RECOMMENDED', star: '⭐⭐⭐⭐'},
-        '3': {q: "A bumpy journey. It was smooth sailing at times, but quite rough at others.", s: 'JUST<br>OKAY', star: '⭐⭐⭐'},
-        '2': {q: "Another journey full of holes, but I managed to make it through.", s: 'DISAPPOINTED', star: '⭐⭐'},
-        '1': {q: "A long, rough road full of deep potholes. Exhausting, but I finally made it to the finish line.", s: 'NOT FOR<br>ME', star: '⭐'},
-        'dnf': {q: "The road was a disaster, so I decided to turn back. I'd rather not waste my time on such a bumpy ride.", s: 'DID NOT<br>FINISH', star: '❌ DNF'}
-      };
-      if(content[rating]) {
-        document.getElementById('view-rating').innerText = content[rating].star;
-        document.getElementById('view-stamp').innerHTML = content[rating].s;
-        document.getElementById('input-quote').value = content[rating].q;
-        document.getElementById('footer-quote').innerText = '"' + content[rating].q + '"';
-      }
-    }
-    function downloadStableCard() {
-      html2canvas(document.getElementById('library-card'), {scale: 3, backgroundColor: null}).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'book-card.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      });
-    }
-  </script>
+  }).then(function(canvas) {
+    // Re-apply rounded corners cleanly on the output canvas
+    const out = document.createElement('canvas');
+    const W = canvas.width, H = canvas.height;
+    const R = 15 * 3;
+    out.width = W; out.height = H;
+    const ctx = out.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(R, 0);
+    ctx.lineTo(W-R, 0); ctx.arcTo(W, 0, W, R, R);
+    ctx.lineTo(W, H-R); ctx.arcTo(W, H, W-R, H, R);
+    ctx.lineTo(R, H);   ctx.arcTo(0, H, 0, H-R, R);
+    ctx.lineTo(0, R);   ctx.arcTo(0, 0, R, 0, R);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(canvas, 0, 0);
+
+    const link = document.createElement('a');
+    link.download = 'book-identity-card.png';
+    link.href = out.toDataURL('image/png');
+    link.click();
+    btn.textContent = 'Download PNG';
+    btn.disabled = false;
+  });
+}
+</script>
 </body>
 </html>
